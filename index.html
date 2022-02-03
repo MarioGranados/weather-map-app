@@ -37,6 +37,11 @@
             transition: 500ms;
             background-color: white;
         }
+
+        .list-group-item img {
+            height: 30px;
+            width: 30px;
+        }
     </style>
 </head>
 <body>
@@ -183,37 +188,38 @@
             hideElements();
             switch (myDate.getDay()) {
                 case 0:
-                    myDate = 'Sunday';
+                    myDate = 'Sun';
                     break;
                 case 1:
-                    myDate = 'Monday';
+                    myDate = 'Mon';
                     break;
                 case 2:
-                    myDate = 'Tuesday';
+                    myDate = 'Tue';
                     break;
                 case 3:
-                    myDate = 'Wednesday';
+                    myDate = 'Wedn';
                     break;
                 case 4:
-                    myDate = 'Thursday';
+                    myDate = 'Thu';
                     break;
                 case 5:
-                    myDate = 'Friday';
+                    myDate = 'Fri';
                     break;
                 default:
-                    myDate = 'Saturday';
+                    myDate = 'Sat';
                     break;
             }
+            humidity *= .1
             html =
-                `<div class="card m-md-auto" style="width: 18rem;">
+                `<div class="card">
                 <div class="card-header text-white text-center bg-dark">
                     ${myDate} <br> ${date}
                 </div>
                     <div class="list-group-item text-center">High:${max} <br> Low:${min}</div>
                     <div class="list-group-item text-center p-3">
-                    <img src="${iconUrl + icon + iconPng}" alt="${describe}">${describe}</div>
-                    <div class="list-group-item text-center">Wind: <br> ${speed}mph</div>
-                    <div class="list-group-item text-center">Humidity <br> ${humidity}%</div>
+                    <img src="${iconUrl + icon + iconPng}" alt="${describe}"> <br> ${describe}</div>
+                    <div class="list-group-item text-center">Wind: <br> ${speed} <br> mph </div>
+                    <div class="list-group-item text-center">Humidity <br> ${(humidity).toFixed(1)}%</div>
             </div>`;
             $('#forecast').append(html);
         }
@@ -284,11 +290,6 @@
                 //console.log(data);
                 $.each(data.daily, function (index, value) {
                     var myDate = new Date(value.dt * 1000);
-                    //checking to see how date format is
-                    /*                console.log(myDate);
-                                    console.log(myDate.getDay());
-                                    console.log(myDate.getDate())
-                                    console.log(myDate.getMonth())*/
 
                     //set date to day / month format
                     var date = `${myDate.getMonth() + 1} / ${myDate.getDate()}`;
