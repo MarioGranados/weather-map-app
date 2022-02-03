@@ -40,7 +40,7 @@
 
 
 
-        @media only screen and (min-width: 890px) {
+        @media only screen and (max-width: 900px){
             .list-group-item img {
                 height: 30px;
                 width: 30px;
@@ -228,6 +228,60 @@
             $('#forecast').append(html);
         }
 
+        //this function adds a marker
+        function addMarker(lat, long, map) {
+            let coordinates = ([long, lat]);
+            var marker = new mapboxgl.Marker()
+                .setLngLat(coordinates)
+                .addTo(map)
+            //removes marker on click
+            map.on('click', () => {
+                marker.remove();
+            })
+        }
+
+        //website decoration, basically
+        function hideElements() {
+            $('#nav').removeClass('bg-primary').addClass('bg-dark text-white');
+            $('#hidden').addClass('hidden')
+            $('button').removeClass('btn-primary').addClass('btn-dark');
+        }
+
+        function loading() {
+            return `<div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Recieving weather data</span>
+                </div>
+            </div>`
+        }
+
+        function errorLoad() {
+            $('#error').text('We were unable load the current weather at this location, Please Try again later');
+            $('#hidden').removeClass('hidden');
+        }
+        //function recieves JSON API file
+        function getWeatherInfo(lat, long) {
+            $('#loading').append(loading());
+            //JSON get request for the WEATHER API
+            let api = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&units=imperial&appid=${WEATHER_KEY}`
+            $.get(api).done(function (data) {
+                //take off loading
+                $('#loading').text('');
+                //console.log(data);
+                $.each(data.daily, function (index, value) {
+                    var myDate = new Date(value.dt * 1000);
+                    //set date to day / month format
+                    var date = `${myDate.getMonth() + 1} / ${myDate.getDate()}`;
+                    appendToHTML(myDate, date, value.temp.max, value.temp.min, value.weather[0].description, value.wind_speed, value.humidity, html, value.weather[0].icon)
+                    //console.log(value);
+                    map.setStyle('mapbox://styles/mapbox/navigation-night-v1');
+                })
+            }).fail(function () {
+                $('#loading').text('');
+                errorLoad();
+            });
+        }
+
         $('#searchAddress').click((e) => {
             e.preventDefault();
             streetName = $('#street').val();
@@ -239,8 +293,6 @@
             //get lat and long
             geocode(address, MAP_BOX).then(function (result) {
                 //move map to result address
-                /*                map.setCenter(result);
-                                map.setZoom(15);*/
                 lat = result[0];
                 long = result[1];
                 $('#forecast').text('');
@@ -280,69 +332,6 @@
             $('#forecast').text('');
             getWeatherInfo(lat, long);
         });
-
-        //function recieves JSON API file
-        function getWeatherInfo(lat, long) {
-            $('#loading').append(loading());
-            //JSON get request for the WEATHER API
-            let api = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&units=imperial&appid=${WEATHER_KEY}`
-            $.get(api).done(function (data) {
-
-                //take off loading
-                $('#loading').text('');
-
-                //console.log(data);
-                $.each(data.daily, function (index, value) {
-                    var myDate = new Date(value.dt * 1000);
-
-                    //set date to day / month format
-                    var date = `${myDate.getMonth() + 1} / ${myDate.getDate()}`;
-
-                    appendToHTML(myDate, date, value.temp.max, value.temp.min, value.weather[0].description, value.wind_speed, value.humidity, html, value.weather[0].icon)
-                    //console.log(value);
-
-                    map.setStyle('mapbox://styles/mapbox/navigation-night-v1');
-
-                })
-            }).fail(function () {
-                $('#loading').text('');
-                errorLoad();
-            });
-        }
-
-        //this function adds a marker
-        function addMarker(lat, long, map) {
-            let coordinates = ([long, lat]);
-            var marker = new mapboxgl.Marker()
-                .setLngLat(coordinates)
-                .addTo(map)
-            //removes marker on click
-            map.on('click', () => {
-                marker.remove();
-            })
-        }
-
-        //this function adds class hidden to hide certain elements
-        function hideElements() {
-            $('#nav').removeClass('bg-primary').addClass('bg-dark text-white');
-            $('#hidden').addClass('hidden')
-            $('button').removeClass('btn-primary').addClass('btn-dark');
-        }
-
-        function loading() {
-            return `<div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="sr-only">Recieving weather data</span>
-                </div>
-            </div>`
-        }
-
-        function errorLoad() {
-            $('#error').text('We were unable load the current weather at this location, Please Try again later');
-            $('#hidden').removeClass('hidden');
-        }
-
-
     });
 
 </script>
