@@ -38,9 +38,13 @@
             background-color: white;
         }
 
-        .list-group-item img {
-            height: 30px;
-            width: 30px;
+
+
+        @media only screen and (min-width: 890px) {
+            .list-group-item img {
+                height: 30px;
+                width: 30px;
+            }
         }
     </style>
 </head>
@@ -215,7 +219,7 @@
                 <div class="card-header text-white text-center bg-dark">
                     ${myDate} <br> ${date}
                 </div>
-                    <div class="list-group-item text-center">High:${max} <br> Low:${min}</div>
+                    <div class="list-group-item text-center">Hi:${max} <br> Lo:${min}</div>
                     <div class="list-group-item text-center p-3">
                     <img src="${iconUrl + icon + iconPng}" alt="${describe}"> <br> ${describe}</div>
                     <div class="list-group-item text-center">Wind: <br> ${speed} <br> mph </div>
