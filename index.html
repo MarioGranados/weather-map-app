@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Weather Map</title>
+    <!--bootstrap-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <!--mapbox css-->
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet'/>
+    <!-- Custom CSS -->
+
+    <!--google stuff-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&display=swap" rel="stylesheet">
+    <style>
+
+        * {
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        #map {
+            /* the width and height may be set to any size */
+            width: 100%;
+            height: 400px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #social_media .btn:hover {
+            transition: 500ms;
+            background-color: white;
+        }
+
+
+
+        @media only screen and (max-width: 900px){
+            .list-group-item img {
+                height: 30px;
+                width: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- As a link -->
+
+<!--navbar-->
+<nav class="navbar navbar-light bg-primary" id="nav">
+    <div class="container">
+        <a class="navbar-brand" href="#">WeatherMap</a>
+    </div>
+
+</nav>
+
+<div class="jumbotron mb-0">
+    <div id="hidden">
+        <h1 class="display-4 text-center" id="error">The Weather Map App</h1>
+        <p class="lead text-center">This app displays the weather forecast for the next 7 days in any desired
+            location</p>
+        <hr class="my-4">
+        <p class="text-center">click anywhere on the map, or search any location by filling out the information
+            below</p>
+    </div>
+    <div id="loading"></div>
+
+    <div class="card-group" id="forecast">
+        <!--Were going to add stuff here via Jquery-->
+    </div>
+    <!--form to search address-->
+    <div class="container">
+        <form class="my-5" id="form">
+            <div class="form-row">
+
+                <div class="col-lg-4 col-md-12 col-xl-4">
+                    <label for="street"></label>
+                    <input type="text" id="street" class="form-control" placeholder="Street" alt="Street Name">
+                </div>
+
+                <div class="col-lg-4 col-md-12 col-xl-2">
+                    <label for="city"></label>
+                    <input type="text" id="city" class="form-control" placeholder="City" alt="City">
+                </div>
+
+                <div class="col-lg-2 col-md-12 col-xl-2">
+                    <label for="state"></label>
+                    <input type="text" id="state" class="form-control" placeholder="State" alt="State">
+                </div>
+
+                <div class="col-lg-1 col-md-12 col-xl-2">
+                    <label for="zip"></label>
+                    <input type="text" id="zip" class="form-control" placeholder="Zip" alt="Zipcode">
+                </div>
+
+                <div class="col-lg-1 col-md-2 my-4 col-xl-2">
+                    <label for="searchAddress"></label>
+                    <button class="btn btn-primary" id="searchAddress">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- The HTML element that serves as the Mapbox container -->
+
+    <div class="container" id='map'>
+
+    </div>
+</div>
+
+
+<!--footer-->
+<section class="bg-dark text-white">
+    <!-- Section: Social media -->
+    <section class="mb-3 justify-content-center d-flex pt-5" id="social_media">
+        <!-- Linkedin -->
+        <a class="btn btn-outline-dark btn-floating m-1" href="https://www.linkedin.com/in/mario-granados-18a21b186/" role="button"><img
+                src="https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg"
+                alt="Linked_in" style="width: 40px; height: 40px;"></a>
+
+        <!-- Github -->
+        <a class="btn btn-outline-dark btn-floating m-1" href="https://github.com/MarioGranados" role="button"
+        ><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="github_logo"
+              style="width: 40px; height: 40px"></a>
+
+    </section>
+    <p class="text-center">Follow Me on Social Media!</p>
+    <hr style="width: 80%; margin: auto; border: 1px solid #7b1a1a">
+    <section class="text-center py-3">
+        Website made by: Mario Granados
+    </section>
+
+
+</section>
+
+
+<!-- Mapbox JS -->
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+
+<!--bootstrap-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+        crossorigin="anonymous"></script>
+
+<!--myscript-->
+<script src="./config.js"></script>
+
+<!--JQuery-->
+<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
+        crossorigin="anonymous"></script>
+<!--GeoCoder-->
+<script src="./js/mapbox-geocoder-utils.js"></script>
+
+<script>
+    //after loaded document
+    $(document).ready(() => {
+        const WEATHER_KEY = '0029b0b62fa128718a575fdfda32ba6f'
+        mapboxgl.accessToken = "pk.eyJ1IjoibWFyaW9ncmFuYWRvcyIsImEiOiJja3oyeXVyMnAwMWpkMm5ueHF2ZnhlZmpsIn0.yVQOsReBceDhGPXKHbZxew";
+        const MAP_BOX = mapboxgl.accessToken;
+        let map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v9',
+            zoom: 10,
+            center: [-98.4916, 29.4252],
+        });
+
+        const nav = new mapboxgl.NavigationControl({
+            visualizePitch: true
+        });
+        map.addControl(nav, 'bottom-right');
+
+        //if we need to search a new city, this will allow us to override the current city
+        let city = 'San Antonio',
+            streetName = '600 Navarro ST #350',
+            state = 'TX',
+            zip = '78205',
+            address = streetName + ' ' + city + ' ' + state + ', ' + zip,
+            lat = 0,
+            long = 0,
+            html = '',
+            iconUrl = "http://openweathermap.org/img/wn/", iconPng = "@2x.png";
+
+        //add stuff to html, this will add all the info into cards via bootstrap
+        function appendToHTML(myDate, date, max, min, describe, speed, humidity, html, icon) {
+            hideElements();
+            switch (myDate.getDay()) {
+                case 0:
+                    myDate = 'Sun';
+                    break;
+                case 1:
+                    myDate = 'Mon';
+                    break;
+                case 2:
+                    myDate = 'Tue';
+                    break;
+                case 3:
+                    myDate = 'Wedn';
+                    break;
+                case 4:
+                    myDate = 'Thu';
+                    break;
+                case 5:
+                    myDate = 'Fri';
+                    break;
+                default:
+                    myDate = 'Sat';
+                    break;
+            }
+            humidity *= .1
+            html =
+                `<div class="card">
+                <div class="card-header text-white text-center bg-dark">
+                    ${myDate} <br> ${date}
+                </div>
+                    <div class="list-group-item text-center">Hi:${max} <br> Lo:${min}</div>
+                    <div class="list-group-item text-center p-3">
+                    <img src="${iconUrl + icon + iconPng}" alt="${describe}"> <br> ${describe}</div>
+                    <div class="list-group-item text-center">Wind: <br> ${speed} <br> mph </div>
+                    <div class="list-group-item text-center">Humidity <br> ${(humidity).toFixed(1)}%</div>
+            </div>`;
+            $('#forecast').append(html);
+        }
+
+        //this function adds a marker
+        function addMarker(lat, long, map) {
+            let coordinates = ([long, lat]);
+            var marker = new mapboxgl.Marker()
+                .setLngLat(coordinates)
+                .addTo(map)
+            //removes marker on click
+            map.on('click', () => {
+                marker.remove();
+            })
+        }
+        //website decoration, basically
+        function hideElements() {
+            $('#nav').removeClass('bg-primary').addClass('bg-dark text-white');
+            $('#hidden').addClass('hidden')
+            $('button').removeClass('btn-primary').addClass('btn-dark');
+        }
+        function loading() {
+            return `<div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Recieving weather data</span>
+                </div>
+            </div>`
+        }
+        function errorLoad() {
+            $('#error').text('We were unable load the current weather at this location, Please Try again later');
+            $('#hidden').removeClass('hidden');
+        }
+        //function recieves JSON API file
+        function getWeatherInfo(lat, long) {
+            $('#loading').append(loading());
+            //JSON get request for the WEATHER API
+            let api = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&units=imperial&appid=${WEATHER_KEY}`
+            $.get(api).done(function (data) {
+                //take off loading
+                $('#loading').text('');
+                //console.log(data);
+                $.each(data.daily, function (index, value) {
+                    var myDate = new Date(value.dt * 1000);
+                    //set date to day / month format
+                    var date = `${myDate.getMonth() + 1} / ${myDate.getDate()}`;
+                    appendToHTML(myDate, date, value.temp.max, value.temp.min, value.weather[0].description, value.wind_speed, value.humidity, html, value.weather[0].icon)
+                    //console.log(value);
+                    map.setStyle('mapbox://styles/mapbox/navigation-night-v1');
+                })
+            }).fail(function () {
+                $('#loading').text('');
+                errorLoad();
+            });
+        }
+        $('#searchAddress').click((e) => {
+            e.preventDefault();
+            streetName = $('#street').val();
+            city = $('#city').val();
+            state = $('#state').val();
+            zip = $('#zip').val()
+            address = streetName + ' ' + city + ' ' + state + ', ' + zip;
+            //get lat and long
+            geocode(address, MAP_BOX).then(function (result) {
+                //move map to result address
+                lat = result[0];
+                long = result[1];
+                $('#forecast').text('');
+                getWeatherInfo(long, lat);
+                // Using easeTo options, according to documentation
+                map.easeTo({
+                    center: ([lat, long]),
+                    zoom: 15,
+                    speed: 0.8,
+                    curve: 1,
+                    duration: 2000,
+                    easing(t) {
+                        return t;
+                    }
+                });
+                addMarker(long, lat, map);
+            });
+        });
+        //when we click on map, lets add marker and get long and latitude coords
+        map.on('click', (e) => {
+            //console.log(typeof (e.lngLat.lat)); //returns number coord
+            lat = e.lngLat.lat;
+            long = e.lngLat.lng;
+            /*            console.log(`long: ${long} lat: ${lat}`);
+                        console.log(`long: ${typeof(long)} lat: ${typeof(lat)}`);*/
+            addMarker(lat, long, map);
+            map.flyTo({
+                center: [long, lat],
+                zoom: 11,
+                speed: 1.8,
+                curve: 1,
+                easing(t) {
+                    return t;
+                }
+            });
+            $('#forecast').text('');
+            getWeatherInfo(lat, long);
+        });
+    });
+
+</script>
+</body>
+</html>
