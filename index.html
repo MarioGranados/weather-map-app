@@ -239,14 +239,12 @@
                 marker.remove();
             })
         }
-
         //website decoration, basically
         function hideElements() {
             $('#nav').removeClass('bg-primary').addClass('bg-dark text-white');
             $('#hidden').addClass('hidden')
             $('button').removeClass('btn-primary').addClass('btn-dark');
         }
-
         function loading() {
             return `<div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
@@ -254,7 +252,6 @@
                 </div>
             </div>`
         }
-
         function errorLoad() {
             $('#error').text('We were unable load the current weather at this location, Please Try again later');
             $('#hidden').removeClass('hidden');
@@ -281,7 +278,6 @@
                 errorLoad();
             });
         }
-
         $('#searchAddress').click((e) => {
             e.preventDefault();
             streetName = $('#street').val();
@@ -289,7 +285,6 @@
             state = $('#state').val();
             zip = $('#zip').val()
             address = streetName + ' ' + city + ' ' + state + ', ' + zip;
-
             //get lat and long
             geocode(address, MAP_BOX).then(function (result) {
                 //move map to result address
@@ -311,7 +306,6 @@
                 addMarker(long, lat, map);
             });
         });
-
         //when we click on map, lets add marker and get long and latitude coords
         map.on('click', (e) => {
             //console.log(typeof (e.lngLat.lat)); //returns number coord
