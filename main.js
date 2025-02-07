@@ -1,7 +1,7 @@
 //after loaded document
 $(document).ready(() => {
-  const WEATHER_KEY = WEATHER_API_KEY;
-  mapboxgl.accessToken = MAPBOX_API_KEY;
+  const WEATHER_KEY = process.env.WEATHER_API_KEY;
+  mapboxgl.accessToken = process.env.MAPBOX_API_KEY;
   const MAP_BOX = mapboxgl.accessToken;
   let map = new mapboxgl.Map({
     container: "map",
